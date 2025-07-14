@@ -6,7 +6,7 @@ class SudokuBoard
     void ConstructBoard();
     void SantifyBoard();
     void GenerateRandomBox(int& _iteratorbox);
-    void GetPossRowsOfBoxCtr(int**& Array);
+    void CalculateMissingOfBox(int& BoxRow,int& BoxCol,char* MissOfBox,int& BoxIterator);
     int GetRow(const int& _Position);
     int GetColumn(const int& _Position);
     char RandomPossChars[9] = {'1','2','3','4','5','6','7','8','9'};

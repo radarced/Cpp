@@ -80,21 +80,21 @@ void SudokuBoard::GenerateRandomBox(int& _iteratorContainerbox)
 // goal is to validify AT least the box pair then move on to the next box and repeat;
 void SudokuBoard::SantifyBoard()
 { // so we're iterating over the boxctrs and their boxes so double for loops;
-    char* MissingOfArr;
-    char* Validifiedarr[9]; 
-    char* MissOfCol;
-    char* MissOfBox;
+    char MissingOfArr[9];
+    char MissOfCol[9];
+    char MissOfBox[9];
     int Col;
     int Row;
     int BoxRow;
     int BoxCol;
 
-    int** PossRowsOfBoxCtr; // our row Box Containers like 0 : 1,2,3 1 : 4,5,6 2 : 7,8,9
-    GetPossRowsOfBoxCtr(PossRowsOfBoxCtr); // what i expect : ^^
-
     for(int BoxCtrIterator = 0;BoxCtrIterator < 9;BoxCtrIterator++)
     { // boxctr
         // MissOfBox is calculated here;
+        BoxRow = GetRow(BoxCtrIterator);
+        BoxCol = GetColumn(BoxCtrIterator);
+        this->CalculateMissingOfBox(BoxRow,BoxCol,MissOfBox,BoxCtrIterator);
+
         for(int BoxIterator = 0;BoxIterator < 9;BoxIterator++)
         { // box
             char CurrentBox = this->Board[BoxCtrIterator][BoxIterator]; // current char Box;3 < BoxIterator < 7
@@ -107,11 +107,19 @@ void SudokuBoard::SantifyBoard()
             // so something like a function overload?
             
             Row = GetRow(BoxIterator);
-            BoxRow = GetRow(BoxCtrIterator);
 
         }
     }
 }
+// BoxRow and BoxCol is for checking for validified ones
+void SudokuBoard::CalculateMissingOfBox(int& BoxRow,int& BoxCol,char* MissOfBox,int& BoxCtrIterator)
+{
+    for (int Boxiterator = 0;Boxiterator < 9;Boxiterator++)
+    {
+        // in a 1d 9 els array how do u check if there are repeated elements
+    }
+}
+
  // the getRow and GetCol works for both the Boxes and the chars inside the boxes since both are 3x3 grids
 int SudokuBoard::GetColumn(const int& _Position)
 {
@@ -138,36 +146,4 @@ int SudokuBoard::GetRow(const int& _Position) // function assumes its an 3x3 gri
         Row = 1;
     }
     return Row;
-}
-
-void SudokuBoard::GetPossRowsOfBoxCtr(int**& Array)
-{// set 0 = 1,2,3 1 = 4,5,6 2 = 7,8,9
-    // Array = new int*[3]; // ur telling the compiler to allocate memory for an array that stores int ptrs
-
-    // for (int iterator = 0;iterator < 3;iterator++)
-    // {
-    //     Array[iterator] = new int[3];
-    // }
-
-    // int Start = 1;
-    // int End = Start + 3;
-    // for(int i = 0;i< 3;i++)
-    // {
-    //     for(int j = 0;j < 3;j++)
-    //     { // 0,0 0,1 0
-    //         Array[i][j] = Start;
-    //         Start++;
-    //         if (Start == End)
-    //         {
-    //             End = Start + 3;
-    //         }   
-    //     }
-    // }
-    //  for(int i = 0;i< 3;i++)
-    // {
-    //     for(int j = 0;j < 3;j++)
-    //     {
-    //         std::cout<<Array[i][j]<<" , ";
-    //     }
-    // }
 }

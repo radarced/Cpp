@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+#include <string>
 
 void ReadMultiple(char*& Command,int& Type);
 void ReadWCin(char* Message);
@@ -10,23 +11,23 @@ class Command
     friend std::istream& operator>>(std::istream& InStream,Command& InCommand);
     Command() : m_Parameter(0){};
     Command(std::istream& Is) { Is>> *this;} // so it accepts an istream and then it basically passes that istream to that friend operator overloader;
+    friend std::ostream& operator<<(std::ostream& Ostream,Command& InCommand);
     private :
-    char* m_Cmd;
+    std::string m_Cmd;
     int m_Parameter;
 };
 
 int main()
 { // so since cin is an object it has to get initialized so i think iostream does that automatically
  // reading multiple inputs;
-    char* InputCommand;
     int InputParam;
-    char* Message;
     Command user_Command;
 
-    ReadMultiple(InputCommand,InputParam);
-    ReadWCin(Message);
-    
-
+    // ReadMultiple(InputCommand,InputParam);
+    // ReadWCin(Message);
+    std::cin>>user_Command;
+    std::cout<<user_Command;
+    std::cin.get();
 }
 
 
@@ -55,6 +56,7 @@ void ReadWCin(char* Message)
 
 std::istream& operator>>(std::istream& InStream,Command& InCommand)
 {
+    std::cout<<"Enter Command Params"<<"\n";
     InStream>>InCommand.m_Cmd>>InCommand.m_Parameter; // takes input like cmd parameter
     // if the wrong data type is passed or if the range is not met then a failbit or eofbit is set which can be detected by .fail() on std::istream;
     if(InStream.fail())
@@ -69,4 +71,11 @@ std::istream& operator>>(std::istream& InStream,Command& InCommand)
     }
 
     return InStream;
+}
+
+std::ostream& operator<<(std::ostream& Ostream,Command& InCommand)
+{
+    Ostream<<"Command : "<<InCommand.m_Cmd<<" Parameter : "<<InCommand.m_Parameter<<std::endl;
+    Ostream<<"Supp Angle : "<<180 - InCommand.m_Parameter<<std::endl; 
+    return Ostream;
 }

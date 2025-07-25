@@ -1,70 +1,73 @@
-/*Student Grade Management System:
- Read student names and grades from a file, calculate averages, 
- and write results to another file.*/
-
-// ok so 1 file with a bunch of items ; if file not exist we create it same directory;
-// so i suppoes fstream; would be used here;
-// so just opening a file <fstream> and writing some data to it;
 #include <iostream>
 #include <fstream>
 #include <limits>
+#include <string>
+#include <cstring> // for strcpy
+
 #define NAME_MAX 100
 
-struct Test
-{
-    char* Message;
+struct Test {
+    char* Message = nullptr;
     int UserInt;
     int MultiBy2;
     bool Valid = false;
 };
 
-std::istream& operator>>(std::istream& InStream,Test& InTest);
-std::ostream& operator<<(std::ostream& OStream,Test& InTest);
+std::istream& operator>>(std::istream& InStream, Test& InTest);
+std::ostream& operator<<(std::ostream& OStream, Test& InTest);
 
-int main()
-{
-    std::ofstream OFILE;
-    OFILE.open("File.txt",std::ios::app); // by default if u dont specify trhe 2nd param then its set to ios::trunc;
-    // add commands stuff and save the text into file;
+int main() {
+    std::ofstream OFILE("File.txt", std::ios::app);
+
+    if (!OFILE.is_open()) {
+        std::cout << "file could not be opened;" << std::endl;
+        return 1;
+    }
+
     Test UserInput;
 
-    if(OFILE.is_open())
-    {
-    std::cin>>UserInput; // so we take input we validify it as well check validity by Test.Valid
-    if(UserInput.Valid)
-    {
-        OFILE<<UserInput;
+    std::cin >> UserInput;
+    if (UserInput.Valid) {
+        OFILE << UserInput;
     }
-    }else {std::cout<<"file could not be opened;"<<std::endl;}
-    
+
+    delete[] UserInput.Message; // free heap memory!
     std::cin.get();
+    return 0;
 }
 
-std::istream& operator>>(std::istream& InStream,Test& InTest)
-{ // we gon create string then copy over that string to Test.Message because istreams doesnt do dynamics for char*
+std::istream& operator>>(std::istream& InStream, Test& InTest) {
     std::string TempString;
-    if(InStream.getline(InStream,TempString,NAME_MAX,'\n'))
-    { // ok so just use peek() and get() not try and work with getline() and stuff cuz ur goign to get overwhelemed quickly
 
-    }
-    InStream>>InTest.Message>>InTest.UserInt;
-    if(!(InStream.fail()))
-    {
+    std::cout << "Enter Name: ";
+    std::getline(InStream, TempString);
+
+    std::cout << "Enter Integer: ";
+    InStream >> InTest.UserInt;
+
+    if (!InStream.fail()) {
+        // Copy to heap
+        size_t len = TempString.length();
+        InTest.Message = new char[len + 1];
+        std::strcpy(InTest.Message, TempString.c_str());
+
         InTest.MultiBy2 = InTest.UserInt * 2;
-        std::cout<<"Amazing It worked "<<std::endl;
+        std::cout << "Amazing! It worked.\n";
         InTest.Valid = true;
-    }else
-    {
-        InStream.clear(); // flushes the istream;
-        InStream.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-        std::cerr<<"Invalid Input"<<std::endl;
+    } else {
+        InStream.clear();
+        InStream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cerr << "Invalid Input\n";
         InTest.Valid = false;
     }
+
     return InStream;
 }
 
-std::ostream& operator<<(std::ostream& OStream,Test& InTest)
-{// what  i want it to be like Name int int;
-    OStream<<"Name : "<<InTest.Message<<" UserInt : "<<InTest.UserInt<<" MultiBy2 : "<<InTest.MultiBy2<<std::endl;
+std::ostream& operator<<(std::ostream& OStream, Test& InTest) {
+    OStream << "Name: " << InTest.Message
+            << " UserInt: " << InTest.UserInt
+            << " MultiBy2: " << InTest.MultiBy2 << "\n";
     return OStream;
 }
+// Chatgpt fixed this not u;

@@ -1,0 +1,1 @@
+g++ src/main.cpp src/Task.cpp src/Log.cpp -std=c++17 -o mainv1.exe
